@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    <constant name="struts.multipart.maxSize" value="5242880"></constant>
+    <constant name="	struts.i18n.encoding" value="UTF-8"></constant>
+    <!--将action的创建交给spring -->
+    <constant name="struts.objectFactory" value="spring"></constant>
+    <package name="crm" namespace="/" extends="struts-default" strict-method-invocation="false">
+        <!--Spring与Struts2整合：class属性填写Spring中action对象的BeanName
+            完全有Spring管理action的生命周期，其中包括action的创建
+            注意：此时需要手动组装依赖属性
+        -->
+        <action name="UserAction_*" class="web.UserAction" method="{1}">
+            <result name="toHome" type="redirect">/index.htm</result>
+            <result name="error">/login.jsp</result>
+            <result name="login">/login.jsp</result>
+        </action>
+        <action name="CustomerAction_*" class="web.CustomerAction" method="{1}">
+            <result name="saveUI">/jsp/customer/add.jsp</result>
+            <result name="findAll">/jsp/customer/list.jsp</result>
+            <result name="editSuccess">/jsp/customer/edit.jsp</result>
+            <result name="saveSuccess" type="redirectAction">CustomerAction_list.action</result>
+            <result name="deleteSuccess" type="redirectAction">CustomerAction_list.action</result>
+            <result name="updateSuccess" type="redirectAction">CustomerAction_list.action</result>
+            <interceptor-ref name="defaultStack">
+                <param name="fileUpload.maximumSize">4194304</param>
+            </interceptor-ref>
+        </action>
+        <action name="LinkManAction_*" class="linkManAction" method="{1}">
+            <result name="saveUI">/jsp/linkman/add.jsp</result>
+            <result name="findAll">/jsp/linkman/list.jsp</result>
+            <result name="saveSuccess" type="redirectAction">LinkManAction_list.action</result>
+            <result name="editSuccess">/jsp/linkman/edit.jsp</result>
+            <result name="updateSuccess" type="redirectAction">LinkManAction_list.action</result>
+            <result name="deleteSuccess" type="redirectAction">LinkManAction_list.action</result>
+        </action>
+    </package>
+</struts>
